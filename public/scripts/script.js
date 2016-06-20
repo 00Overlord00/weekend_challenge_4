@@ -30,12 +30,13 @@ $( '#inputField' ).val('');
 
 var displayTasks = function( tasks ) {
   for( i = 0; i < tasks.length; i++ ) {
+    $( '#displayField' ).append( '<div id = "newDiv"></div>');
     var toDo = '<p>To Do: ' + tasks[i].to_do + '</p>';
-      $( '#displayField' ).append( toDo );
+      $( '#displayField' ).children().last().append( toDo );
     var completeButton = "<button id = 'complete'>Complete Task</button>";
-      $( '#displayField' ).append( completeButton );
+      $( '#displayField' ).children().last().append( completeButton );
     var deleteButton = "<button id = 'delete'>Blow it off</button>";
-      $( '#displayField' ).append( deleteButton );
+      $( '#displayField' ).children().last().append( deleteButton );
   }
 };
 
