@@ -6,7 +6,7 @@ var bodyParser = require( 'body-parser' );
 var urlencodedParser = bodyParser.urlencoded( { extended: false } );
 var connectionString = 'postgres://localhost:5432/task_manager';  //Determines how we connect to the db.
 
-app.listen( 8080, 'localhost', function( req, res) {  //Tells our server the port on which to listen.
+app.listen( 8080, 'localhost', function( req, res ) {  //Tells our server the port on which to listen.
   console.log( 'Server is listening on 8080.' );
 });
 
@@ -23,10 +23,20 @@ app.post( '/postRoute', urlencodedParser, function( req, res ){  //Post call.
   });
 });
 
+app.post( '/completeTask', urlencodedParser, function( req, res ){
+  pg.connect( connectionString, function( err, client, done ){
+    var query = client.query( 'UPDATE tasks WHERE id = ' + req.body.id + ' ( completed ) VALUES ( $1 ) ( TRUE );' );
+    var rows = 0;
+    query.on( 'row', function( row ) {
+      return res.json( results );
+    });
+  });
+});
+
 app.get( '/getPath', function( req, res ){  //Get call.
   var results = [];
   pg.connect( connectionString, function( err, client, done){
-    var query = client.query( 'SELECT  * FROM tasks;' );  //SQL syntax here, as well.
+    var query = client.query( 'SELECT * FROM tasks ORDER BY completed ASC;' );  //SQL syntax here, as well.
     var rows = 0;
     query.on( 'row', function( row ){
       results.push(row);
